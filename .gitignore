@@ -3,8 +3,11 @@
 
 # 
 
-# Outputdata
+# Output data
 results/
+
+# Testing
+test_area/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
