@@ -6,13 +6,49 @@ from config import *
 
 import pickle
 
-if df_path.endswith('.csv'):
-    df = pd.read_csv(df_path, index_col = 0)
-elif df_path.endswith('.xlsx'):
-    df = pd.read_excel(df_path, index_col = False)
-elif df_path.endswith('.pickle'):
-    df = pd.read_pickle(df_path)
-else: raise NotImplemented
+# Check if the dataframe exists
+if os.path.exists(df_path):
+    pass
+else:
+    raise FileNotFoundError(f"File containing data not found in {df_path}")
+
+# Check if the output directories are available
+# List of all file paths from config
+file_paths = [preprocess_df_path, graph_path, graph_visualization_path, neigh_prob_path, 
+              prob_heatmap_path, degree_distribution_outpath, betweenness_distribution_outpath, 
+              community_composition_outpath]
+
+for file_path in file_paths:
+    # Extract directory path
+    directory = os.path.dirname(file_path)
+    
+    # Check if the directory exists
+    if not os.path.exists(directory):
+        # If not, create it
+        os.makedirs(directory)
+        print(f"Directory '{directory}' has been created.")
+    else:
+        pass
+
+try:
+    if df_path.endswith('.csv'):
+        df = pd.read_csv(df_path, index_col=0)
+    elif df_path.endswith('.xlsx'):
+        df = pd.read_excel(df_path, index_col=None)  # Changed index_col to None for consistency
+    elif df_path.endswith('.pickle'):
+        df = pd.read_pickle(df_path)
+    elif df_path.endswith('.json'):
+        df = pd.read_json(df_path)
+    elif df_path.endswith('.parquet'):
+        df = pd.read_parquet(df_path)
+    elif df_path.endswith('.hdf') or df_path.endswith('.h5'):
+        df = pd.read_hdf(df_path)
+    else:
+        # Suggesting action to the user
+        supported_formats = ", ".join(["CSV", "Excel (.xlsx)", "Pickle", "JSON", "Parquet", "HDF5 (.hdf, .h5)"])
+        raise ValueError(f"The file format is not supported. Please convert your file to one of the following supported formats: {supported_formats}.")
+except Exception as e:
+    print(f"Error reading the data file: {e}")
 
 if drop_cols is not None:
     df = df.drop(drop_cols, axis = 1)

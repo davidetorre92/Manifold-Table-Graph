@@ -1,5 +1,8 @@
 #!/bin/bash
 
+CONFIG_PATH='./bin/config.py'
+MAIN_PATH='./bin/main.py'
+
 # Function to compare Python versions
 compare_python_versions() {
     [[ $1 == $2 ]] && return 1
@@ -20,17 +23,27 @@ compare_python_versions() {
     return 1
 }
 
-echo 'GraphCluster DEMO'
-echo 'Options:'
+print_title() {
+  local title="$1"
+  local border=$(printf '*%.0s' {1..$((${#title}+4))})
+  printf "\n%s\n* %s *\n%s\n\n" "$border" "$title" "$border"
+}
 
-if [[ -f config.ini ]]; then
-    cat config.ini
+print_title "Manifold Table Graph"
+echo ''
+echo '################################'
+echo 'Options:'
+echo '################################'
+
+if [[ -f ${CONFIG_PATH} ]]; then
+    cat ${CONFIG_PATH}
 else
-    echo "Error: config.ini not found."
+    echo "Error: no config file in ${CONFIG_PATH}"
     exit 1
 fi
 
-echo
+echo ''
+echo '################################'
 
 # Check for Python and decide whether to use python or python3
 if command -v python3 &>/dev/null; then
@@ -54,23 +67,5 @@ if [[ -n "$PYTHON3_VERSION" && -n "$PYTHON_VERSION" ]]; then
 fi
 
 echo "Using $PYTHON_CMD"
-echo '1) Distances evaluation'
-$PYTHON_CMD bin/graph_definition/evaluate_similarity.py -c config.ini
-if [ $? -ne 0 ]; then
-    echo "Error in 'Distances evaluation'."
-    exit 1
-fi
 
-echo '2) Graph creation'
-$PYTHON_CMD bin/graph_definition/graph_creation.py -c config.ini
-if [ $? -ne 0 ]; then
-    echo "Error in 'Graph creation'."
-    exit 1
-fi
-
-echo '3) Graph EDA'
-$PYTHON_CMD bin/tasks/visualization.py -c config.ini
-if [ $? -ne 0 ]; then
-    echo "Error in 'Graph EDA'."
-    exit 1
-fi
+$PYTHON_CMD ${MAIN_PATH} -c ${CONFIG_PATH}

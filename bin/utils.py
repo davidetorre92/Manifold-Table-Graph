@@ -12,10 +12,10 @@ from sklearn.neighbors import NearestNeighbors
 
 import networkx as nx
 from scipy.spatial import distance_matrix
+import os
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import seaborn as sns
 
 # import plotly.graph_objects as go
 
@@ -338,14 +338,15 @@ def degree_distributions(G, outpath):
 def betweenness_distributions(G, outpath):
     # Calculate the degree of each node
     betweenness_centrality = nx.betweenness_centrality(G)
-    betweenness_graph = [betweenness_centrality[node] for node in G.nodes()]
-    hist, bin_edges = np.histogram(betweenness_graph, bins = 11)
+    betweenness_data = [betweenness_centrality[node] for node in G.nodes()]
+    hist, bin_edges = np.histogram(betweenness_data)
     # Plot the degree distribution
-    plt.scatter(bin_edges[:-1], hist, alpha=0.75, edgecolor='black')
-    plt.title('Betweenness Distribution')
-    plt.xlabel('Betweenness')
-    plt.ylabel('Number of Nodes')
-    plt.savefig(outpath)
+    fig, ax = plt.subplots()
+    ax.scatter(bin_edges[:-1], hist, alpha=0.75, edgecolor='black')
+    ax.set_title('Betweenness Distribution')
+    ax.set_xlabel('Betweenness')
+    ax.set_ylabel('Number of Nodes')
+    fig.savefig(outpath)
     print(f"Betweenness distribution saved in {outpath}")
 
 def eigenvector_distributions(G, outpath):
@@ -431,10 +432,24 @@ def heat_map_prob(probabilities, df_neigh, label_col, prob_heatmap_path):
         prob_matrix.loc[i, j] = prob
 
     # Plotting the heatmap
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(prob_matrix, annot=True, cmap='viridis', fmt=".2f")
-    plt.title('Probability Distribution Heatmap')
+    fig, ax = plt.subplots(figsize=(8, 6))
+    cax = ax.imshow(prob_matrix, cmap='viridis', interpolation='nearest')
+    fig.colorbar(cax)
+
+    # Adding annotations
+    for i in range(len(labels)):
+        for j in range(len(labels)):
+            text = ax.text(j, i, f"{prob_matrix.iloc[i, j]:.2f}",
+                           ha="center", va="center", color="w")
+
+    ax.set_title('Probability Distribution Heatmap')
+    ax.set_xticks(range(len(labels)))
+    ax.set_yticks(range(len(labels)))
+    ax.set_xticklabels(labels)
+    ax.set_yticklabels(labels)
     plt.xlabel('Label j')
     plt.ylabel('Label i')
+
     plt.savefig(prob_heatmap_path)
     print(f"Neighbour probability data saved in {prob_heatmap_path}")
+
