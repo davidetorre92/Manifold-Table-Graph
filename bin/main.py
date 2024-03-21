@@ -86,8 +86,8 @@ else:
 
 if preprocess_mode == 'infer':
     processed_df = infer_and_preprocess_data(X, scaler=scaler, unique_threshold=unique_threshold)
-# elif preprocess_mode = 'preprocess':
-#     processed_df = preprocess_data(df, numerical_cols, scaler='standard', categorical_cols=):
+elif preprocess_mode == 'preprocess':
+    processed_df = preprocess_data(df, categorical_cols=categorical_cols, scaler='standard')
 else:
    raise NotImplemented
 
@@ -98,21 +98,31 @@ manifold_df = apply_manifold_learning(processed_df, technique, manifold_params)
 manifold_df.to_pickle(manifold_df_path)
 print(f"Dataframe with manifold techniques saved in {manifold_df_path}")
 
+if relationship_mode == 'original':
+   relationship_df = df.copy()
+elif relationship_mode == 'preprocessed':
+   relationship_df = processed_df.copy()
+elif relationship_mode == 'manifold':
+   relationship_df = manifold_df_path.copy()
+else:
+  raise NotImplemented
+
+
 if graph_mode == 'neighbors':
     if graph_params is None:
-        G = create_similarity_graph(df, processed_df, n_neighbors=5, distance_threshold = None, classification_attribute = y, classification_attribute_name = label_col)
+        G = create_similarity_graph(df, relationship_df, classification_attribute = y, classification_attribute_name = label_col, n_neighbors=5, distance_threshold = None)
     else:
-        G = create_similarity_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
+        G = create_similarity_graph(df, relationship_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
 elif graph_mode =='distance':
     if graph_params is None:
-        G = create_distance_threshold_graph(df, processed_df, distance_function = 2, distance_threshold = 1.0, classification_attribute = y, classification_attribute_name = label_col)
+        G = create_distance_threshold_graph(df, relationship_df, classification_attribute = y, classification_attribute_name = label_col, distance_function = 2, distance_threshold = 1.0)
     else:
-        G = create_distance_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
+        G = create_distance_threshold_graph(df, relationship_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
 elif graph_mode == 'similarity':
     if graph_params is None:
-        G = create_similarity_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, similarity_function = cos_sim, similarity_threshold =0.995)
+        G = create_similarity_threshold_graph(df, relationship_df, classification_attribute = y, classification_attribute_name = label_col, similarity_function = cos_sim, similarity_threshold =0.995)
     else:
-        G = create_similarity_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
+        G = create_similarity_threshold_graph(df, relationship_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
 else:
    raise NotImplemented
 

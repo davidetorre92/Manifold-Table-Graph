@@ -19,7 +19,7 @@ import matplotlib.cm as cm
 
 # import plotly.graph_objects as go
 
-def preprocess_data(df, numerical_cols, scaler='standard', categorical_cols=None):
+def preprocess_data(df, categorical_cols=None, scaler='standard'):
     """
     Preprocess the dataset: Normalize numerical variables and encode categorical variables.
 
@@ -35,6 +35,12 @@ def preprocess_data(df, numerical_cols, scaler='standard', categorical_cols=None
 
     # Initialize transformers for numerical and categorical data
     transformers = []
+    columns = df.columns
+    numerical_cols = None
+    # Add encoder for categorical columns
+    if categorical_cols:
+        transformers.append(('cat', OneHotEncoder(handle_unknown='ignore', sparse=False), categorical_cols))
+        numerical_cols = [col for col in columns if col not in categorical_cols]
 
     # Add scaler for numerical columns
     if numerical_cols:
@@ -42,10 +48,6 @@ def preprocess_data(df, numerical_cols, scaler='standard', categorical_cols=None
             transformers.append(('num', StandardScaler(), numerical_cols))
         elif scaler == 'minmax':
             transformers.append(('num', MinMaxScaler(), numerical_cols))
-
-    # Add encoder for categorical columns
-    if categorical_cols:
-        transformers.append(('cat', OneHotEncoder(handle_unknown='ignore', sparse=False), categorical_cols))
 
     # Create a ColumnTransformer to apply transformations
     preprocessor = ColumnTransformer(transformers, remainder='passthrough')
@@ -94,7 +96,7 @@ def infer_and_preprocess_data(df, scaler='standard', unique_threshold=0.05):
             categorical_cols.append(col)
 
     # Now preprocess the data using the inferred column types
-    return preprocess_data(df, numerical_cols=numerical_cols, scaler=scaler, categorical_cols=categorical_cols)
+    return preprocess_data(df, scaler=scaler, categorical_cols=categorical_cols)
 
 def apply_manifold_learning(df, technique='TSNE', params=None):
     """
@@ -140,14 +142,14 @@ def cos_sim(x, y):
     cos_sim = np.dot(x, y) / (np.linalg.norm(x) * np.linalg.norm(y))
     return cos_sim
 
-def create_similarity_threshold_graph(original_df, processed_df, similarity_function, similarity_threshold, classification_attribute = None, classification_attribute_name = None):
+def create_similarity_threshold_graph(original_df, relationship_df, similarity_function, similarity_threshold, classification_attribute = None, classification_attribute_name = None):
     """
     Creates a graph where nodes represent entries with original features from original_df,
-    and edges exist if the similarity between points in processed_df is above a similarity_threshold.
+    and edges exist if the similarity between points in relationship_df is above a similarity_threshold.
 
     Parameters:
     - original_df: pandas DataFrame, the original dataset.
-    - processed_df: pandas DataFrame, the dataset after processing (dimensionality reduction, etc.).
+    - relationship_df: pandas DataFrame, the dataset to learn reationships.
     - similarity_function: function, a custom function to compute the similarity between two points.
                            It should return a value in the range [0, 1].
     - similarity_threshold: float, the threshold for adding an edge between two nodes based on similarity.
@@ -168,23 +170,25 @@ def create_similarity_threshold_graph(original_df, processed_df, similarity_func
         G.add_node(idx, **features.to_dict())
 
     # Compute and add edges based on the similarity threshold
-    for i in range(len(processed_df)):
-        for j in range(i+1, len(processed_df)):  # Avoid duplicating edges and self-loops
+    for i in range(len(relationship_df)):
+        for j in range(i+1, len(relationship_df)):  # Avoid duplicating edges and self-loops
             # Calculate similarity between points i and j
-            similarity = similarity_function(processed_df.iloc[i], processed_df.iloc[j])
+            similarity = similarity_function(relationship_df.iloc[i], relationship_df.iloc[j])
             if similarity >= similarity_threshold:
                 G.add_edge(i, j, sim = similarity)
 
     return G
 
-def create_similarity_graph(original_df, processed_df, n_neighbors=5, distance_threshold = None, classification_attribute = None, classification_attribute_name = None):
+def create_similarity_graph(original_df, relationship_df, n_neighbors=5, distance_threshold = None, classification_attribute = None, classification_attribute_name = None):
     """
-    Creates a graph of relations based on a dataset transformed by a manifold learning technique.
+    Creates a graph of relations based on a dataset.
 
     Parameters:
-    - processed_df: pandas DataFrame, the dataset transformed by the manifold learning technique.
     - original_df: pandas DataFrame, the original dataset before preprocessing.
+    - relationship_df: pandas DataFrame, the dataset to learn reationships.
     - n_neighbors: int, the number of nearest neighbors to consider for creating edges.
+    - distance_threshold: float, maximum distance threshold for creating edges between nodes. 
+    If specified, an edge is only added between two nodes if the distance between them (based on their features) is less than or equal to this threshold.
 
     Returns:
     - G: networkx graph, where nodes represent entries with original features and
@@ -204,26 +208,26 @@ def create_similarity_graph(original_df, processed_df, n_neighbors=5, distance_t
         if classification_attribute is not None: G.nodes[idx][classification_attribute_name] = classification_attribute[idx]
 
     # Use NearestNeighbors to find edges based on the transformed dataset
-    nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(processed_df)
-    distances, indices = nbrs.kneighbors(processed_df)
+    nbrs = NearestNeighbors(n_neighbors=n_neighbors).fit(relationship_df)
+    distances, indices = nbrs.kneighbors(relationship_df)
 
     # Add edges based on nearest neighbors
-    for i in range(processed_df.shape[0]):
+    for i in range(relationship_df.shape[0]):
         for j in range(1, n_neighbors): # Start from 1 to avoid self-loop
             if distance_threshold is None or distances[i, j] <= distance_threshold:
                 G.add_edge(i, indices[i, j], d = distances[i,j], d_m1 = 1 / distances[i,j])
 
     return G
 
-def create_distance_threshold_graph(original_df, processed_df, distance_function, distance_threshold, classification_attribute = None, classification_attribute_name = None):
+def create_distance_threshold_graph(original_df, relationship_df, p, distance_threshold, classification_attribute = None, classification_attribute_name = None):
     """
     Creates a graph where nodes represent entries with original features from original_df,
     and edges exist if the distance between points in processed_df is under distance_threshold.
 
     Parameters:
     - original_df: pandas DataFrame, the original dataset.
-    - processed_df: pandas DataFrame, the dataset after processing (dimensionality reduction).
-    - distance_function: function, a function to compute the distance between two points.
+    - relationship_df: pandas DataFrame, the dataset to learn reationships.
+    - p: int which Minkowski p-norm to use.
     - distance_threshold: float, the threshold for adding an edge between two nodes.
 
     Returns:
@@ -238,15 +242,15 @@ def create_distance_threshold_graph(original_df, processed_df, distance_function
 
     G.graph['classification_attribute'] = classification_attribute_name
     # Calculate the distance matrix
-    distances = distance_matrix(processed_df, processed_df, p=distance_function)
+    distances = distance_matrix(relationship_df, relationship_df, p=p)
     # Add nodes with attributes being the original features
     for idx, (_, features) in enumerate(original_df.iterrows()):
         G.add_node(idx, **features.to_dict())
         if classification_attribute is not None: G.nodes[idx][classification_attribute_name] = classification_attribute[idx]
 
     # Add edges based on the distance threshold
-    for i in range(len(processed_df)):
-        for j in range(i+1, len(processed_df)):  # Avoid duplicating edges and self-loops
+    for i in range(len(relationship_df)):
+        for j in range(i+1, len(relationship_df)):  # Avoid duplicating edges and self-loops
             if distances[i, j] <= distance_threshold:
                 G.add_edge(i, j, d = distances[i,j], d_m1 = 1 / distances[i,j])
 
