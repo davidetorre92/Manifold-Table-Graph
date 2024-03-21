@@ -17,7 +17,16 @@ import os
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 
-# import plotly.graph_objects as go
+from datetime import datetime
+
+# Function to append date to filenames if required
+def append_date_to_filenames(path):
+    current_datetime = datetime.now().strftime("_%Y%m%d%H%M")
+    dirname, basename = os.path.split(path)
+    name, ext = os.path.splitext(basename)
+    updated_name = f"{name}{current_datetime}{ext}"
+    updated_path = os.path.join(dirname, updated_name)
+    return updated_path
 
 def preprocess_data(df, categorical_cols=None, scaler='standard'):
     """

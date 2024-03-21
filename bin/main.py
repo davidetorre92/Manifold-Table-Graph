@@ -14,11 +14,11 @@ else:
 
 # Check if the output directories are available
 # List of all file paths from config
-file_paths = [preprocess_df_path, graph_path, graph_visualization_path, neigh_prob_path, 
+output_paths = [preprocess_df_path, graph_path, graph_visualization_path, neigh_prob_path, 
               prob_heatmap_path, degree_distribution_outpath, betweenness_distribution_outpath, 
               community_composition_outpath]
 
-for file_path in file_paths:
+for file_path in output_paths:
     # Extract directory path
     directory = os.path.dirname(file_path)
     
@@ -29,6 +29,17 @@ for file_path in file_paths:
         print(f"Directory '{directory}' has been created.")
     else:
         pass
+
+if save_date_experiment:
+  preprocess_df_path = append_date_to_filenames(preprocess_df_path)
+  graph_path = append_date_to_filenames(graph_path)
+  graph_visualization_path = append_date_to_filenames(graph_visualization_path)
+  neigh_prob_path = append_date_to_filenames(neigh_prob_path)
+  prob_heatmap_path = append_date_to_filenames(prob_heatmap_path)
+  degree_distribution_outpath = append_date_to_filenames(degree_distribution_outpath)
+  betweenness_distribution_outpath = append_date_to_filenames(betweenness_distribution_outpath)
+  community_composition_outpath = append_date_to_filenames(community_composition_outpath)
+
 
 try:
     if df_path.endswith('.csv'):
