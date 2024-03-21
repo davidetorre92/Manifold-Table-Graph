@@ -62,7 +62,7 @@ git clone https://https://github.com/davidetorre92/Manifold-Table-Graph
 ### Installing Requirements
 Navigate to the repository directory and install the required dependencies using:
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 ### Demo
 ```python
