@@ -83,6 +83,7 @@ Will make a graph from the scikit learn's make blobs dataset.
  * ```ids_col```: column containing the id. Set to None where there are no ids and the row's id will be used.
  * ```pass_cols```: columns that should not be preprocessed.
  * ```drop_cols```: columns that won't take part to the model.
+ * ```save_date_experiment```: whenever append the datetime of the experiment on the output files or not.
 
 ### Manifold learning options
  * ```technique```: name of the manifold learning technique to apply. Options are 'TSNE', 'Isomap', 'MDS', 'LLE
