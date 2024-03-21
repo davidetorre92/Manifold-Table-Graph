@@ -358,12 +358,14 @@ def eigenvector_distributions(G, outpath):
     eigenvector_centrality = nx.eigenvector_centrality(G)
     eigenvector_centrality_data = [eigenvector_centrality[node] for node in G.nodes()]
     hist, bin_edges = np.histogram(eigenvector_centrality_data, bins = 10)
+    fig, ax = plt.subplots(figsize = (15,15))
+
     # Plot the degree distribution
-    plt.scatter(bin_edges[:-1], hist, alpha=0.75, edgecolor='black')
-    plt.title('Eigenvector centrality distribution')
-    plt.xlabel('Eigenvector')
-    plt.ylabel('Number of Nodes')
-    plt.savefig(outpath)
+    ax.scatter(bin_edges[:-1], hist, alpha=0.75, edgecolor='black')
+    ax.set_title('Eigenvector centrality distribution')
+    ax.set_xlabel('Eigenvector')
+    ax.set_ylabel('Number of Nodes')
+    fig.savefig(outpath)
     print(f"Eigenvector distribution saved in {outpath}")
 
 def plot_community_composition(G, attribute_name, outpath):
@@ -411,7 +413,7 @@ def plot_community_composition(G, attribute_name, outpath):
     ax.legend()
 
     # Show the plot
-    plt.savefig(outpath)
+    fig.savefig(outpath)
     print(f"Community composition saved in {outpath}")
 
 

@@ -23,8 +23,10 @@ manifold_df_path = 'results/demo/manifold_df.pickle'
 relationship_mode = 'preprocessed'
 graph_mode = 'similarity' # Pick one among ['neighbors', 'distance', 'similarity']
 graph_params = {'similarity_function': cos_sim, 'similarity_threshold': 0.95} # dict, parameters to pass to the manifold learning algorithm. None will use pre-set parameters.
+
 # [graph visualization options]
 plot_graph = True
+save_date_experiment = True
 graph_path = 'results/demo/neighbors_graph.pickle'
 graph_visualization_path = 'results/demo/graph.pdf'
 neigh_prob_path = 'results/demo/neigh_prob.dat'
