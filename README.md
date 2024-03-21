@@ -7,6 +7,46 @@ A Python library for creating a graph representation of tabular data.
 - **Distance Metrics:** Evaluate distances between data points using user-defined metrics.
 - **Graph Creation:** Generate graphs using the igraph library with edges based on distance metrics.
 - **Visualization:** Plot the graph to understand how different data is distributed
+## Diagram
+```mermaid
+flowchart TD
+    subgraph Input
+    conf[/configuration/] --> A
+    end
+    A[/Dataframe/] --> B{Preprocess}
+    conf[/configuration/] -->|preprocess_mode| B
+
+    subgraph Preprocess
+    B -->|infer| C[Get numerical columns and categorical columns]
+    B -->|preprocess| D
+    C --> D[Preprocess] --> E[/Preprocessed dataframe/]
+    end
+    subgraph Manifold Learning
+    E --> F[Apply manifold technique]
+    F --> G[/Manifold dataframe/]
+    end
+    conf-->|relationship_mode| H
+    subgraph Graph Learning
+    A --> H{Mode}
+    E --> H
+    G --> H
+    H --> |Neighbour graph| G1
+    H --> |Distance threshold graph| G2
+    H --> |Similarity threshold graph| G3
+    conf-->|n_neighbors \n distance_threshold| G1[Nighbours]
+    conf-->|p \n distance_threshold| G2[Distance]
+    conf-->|similarity_function \n similarity_threshold| G3[Similarity]
+    G1 --> Graph
+    G2 --> Graph
+    G3 --> Graph
+    end
+    subgraph Visualization
+    Graph --> N[Neighbours attributes]
+    N --> b[Betweenness distribution]
+    b --> d[Degree distribution]
+    d --> Plot
+    end
+```
 
 ## Quickstart and Demo
 
@@ -86,5 +126,4 @@ For any inquiries or futher discussion regarding this project, we invite to reac
 
 - [Davide Torre](https://www.linkedin.com/in/davidetorre92/): d[dot]torre[at]iac[dot]cnr[dot]it
 - [Davide Chicco](https://davidechicco.it): davidechicco[at]davidechicco[dot]it
-
 
