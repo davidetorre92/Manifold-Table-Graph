@@ -14,7 +14,7 @@ else:
 
 # Check if the output directories are available
 # List of all file paths from config
-output_paths = [preprocess_df_path, graph_path, graph_visualization_path, neigh_prob_path, 
+output_paths = [manifold_df_path, preprocess_df_path, graph_path, graph_visualization_path, neigh_prob_path, 
               prob_heatmap_path, degree_distribution_outpath, betweenness_distribution_outpath, 
               community_composition_outpath]
 
@@ -39,6 +39,7 @@ if save_date_experiment:
   degree_distribution_outpath = append_date_to_filenames(degree_distribution_outpath)
   betweenness_distribution_outpath = append_date_to_filenames(betweenness_distribution_outpath)
   community_composition_outpath = append_date_to_filenames(community_composition_outpath)
+  manifold_df_path = append_date_to_filenames(manifold_df_path)
 
 
 try:
@@ -161,7 +162,7 @@ if label_col is not None:
 
     heat_map_prob(probabilities, df_neigh, label_col, prob_heatmap_path)
 
-# degree_distributions(G, degree_distribution_outpath)
+degree_distributions(G, degree_distribution_outpath)
 betweenness_distributions(G, betweenness_distribution_outpath)
 plot_community_composition(G, label_col, community_composition_outpath)
 if plot_graph:

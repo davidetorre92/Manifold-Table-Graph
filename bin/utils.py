@@ -335,16 +335,17 @@ def degree_distributions(G, outpath):
     degrees = [degree for node, degree in G.degree()]
     hist, bin_edges = np.histogram(degrees, bins = range(0, max(degrees)))
     # Plot the degree distribution
-    plt.scatter(bin_edges[:-1], hist, alpha=0.75, edgecolor='black')
-    plt.title('Degree Distribution')
-    plt.xlim((1,None))
-    plt.ylim((1,None))
-    plt.xlabel('Degree')
-    plt.ylabel('Number of Nodes')
-    plt.xscale('log')
-    plt.yscale('log')
-    plt.show()
-    plt.savefig(outpath)
+    fig, ax = plt.subplots()
+    ax.scatter(bin_edges[:-1], hist, alpha=0.75, edgecolor='black')
+    ax.set_title('Degree Distribution')
+    ax.set_xlim((1,None))
+    ax.set_ylim((1,None))
+    ax.set_xlabel('Degree')
+    ax.set_ylabel('Number of Nodes')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    fig.show()
+    fig.savefig(outpath)
     print(f"Degree distribution saved in {outpath}")
 
 
