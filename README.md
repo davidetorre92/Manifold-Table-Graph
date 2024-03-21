@@ -29,7 +29,7 @@ pip install -r requirements.txt
 ### Demo
 The creation of a graph from tabular data happens in two steps:
 1. Evaluate the distance between all pairs of nodes
-2. Create a graph according to some thresholdù
+2. Create a graph according to some threshold.
 
 #### 1. Distance Evaluation
 
