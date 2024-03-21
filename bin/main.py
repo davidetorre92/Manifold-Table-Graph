@@ -105,14 +105,14 @@ if graph_mode == 'neighbors':
         G = create_similarity_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
 elif graph_mode =='distance':
     if graph_params is None:
-        G = create_distance_threshold_graph(df, processed_df, distance_function = 2, distance_threshold = 1.0, classification_attribute = y, classification_attribute_name = None)
+        G = create_distance_threshold_graph(df, processed_df, distance_function = 2, distance_threshold = 1.0, classification_attribute = y, classification_attribute_name = label_col)
     else:
-        G = create_distance_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = None, **graph_params)
+        G = create_distance_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
 elif graph_mode == 'similarity':
     if graph_params is None:
-        G = create_similarity_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = None, similarity_function = cos_sim, similarity_threshold =0.995)
+        G = create_similarity_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, similarity_function = cos_sim, similarity_threshold =0.995)
     else:
-        G = create_similarity_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = None, **graph_params)
+        G = create_similarity_threshold_graph(df, processed_df, classification_attribute = y, classification_attribute_name = label_col, **graph_params)
 else:
    raise NotImplemented
 

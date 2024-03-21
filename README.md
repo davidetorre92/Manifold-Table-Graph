@@ -8,10 +8,6 @@ A Python library for creating a graph representation of tabular data.
 - **Graph Creation:** Generate graphs using the igraph library with edges based on distance metrics.
 - **Visualization:** Plot the graph to understand how different data is distributed
 
-**UPCOMING**
-- **Centrality Measurement:** Assess centrality to classify the typicality of entries.
-- **Clustering via community detection:** Search for communities in the graph to cluster the data points.
-
 ## Quickstart and Demo
 
 ### Downloading the Repository
@@ -30,17 +26,10 @@ pip install -r requirements.txt
 The creation of a graph from tabular data happens in two steps:
 1. Evaluate the distance between all pairs of nodes
 2. Create a graph according to some threshold.
-
-#### 1. Distance Evaluation
-
-```python
-python3 bin/graph_definition/evaluate_similarity.py -c config.ini
+```bash
+bash demo.sh
 ```
 
-#### 2. Graph Creation
-```python
-python3 bin/graph_definition/graph_creation.py -c config.ini
-```
 ### Tasks
 #### Graph Visualization
 Run the script for graph visualization using:
