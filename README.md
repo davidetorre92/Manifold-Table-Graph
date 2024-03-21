@@ -63,12 +63,11 @@ Navigate to the repository directory and install the required dependencies using
 pip install -r requirements.txt
 ```
 ### Demo
-The creation of a graph from tabular data happens in two steps:
-1. Evaluate the distance between all pairs of nodes
-2. Create a graph according to some threshold.
-```bash
-bash demo.sh
+```python
+python bin/main.py
 ```
+
+Will make a graph from the scikit learn's make blobs dataset.
 
 ## Configuration
 ### Preprocessing options
