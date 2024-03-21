@@ -43,7 +43,13 @@ if save_date_experiment:
 
 try:
     if df_path.endswith('.csv'):
-        df = pd.read_csv(df_path, index_col=0)
+        # read the first row of the CSV to determine if the first column is an index
+        peek_df = pd.read_csv(df_path, nrows=1)
+        # check if the first column looks like an index (e.g., unnamed or follows a specific pattern)
+        if peek_df.columns[0].startswith('Unnamed') or peek_df.columns[0].isdigit():
+            df = pd.read_csv(df_path, index_col=0)
+        else:
+            df = pd.read_csv(df_path)
     elif df_path.endswith('.xlsx'):
         df = pd.read_excel(df_path, index_col=None)  # Changed index_col to None for consistency
     elif df_path.endswith('.pickle'):
