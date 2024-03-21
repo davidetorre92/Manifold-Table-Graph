@@ -52,7 +52,7 @@ try:
         else:
             df = pd.read_csv(df_path)
     elif df_path.endswith('.xlsx'):
-        df = pd.read_excel(df_path, index_col=None)  # Changed index_col to None for consistency
+        df = pd.read_excel(df_path, index_col=None)
     elif df_path.endswith('.pickle'):
         df = pd.read_pickle(df_path)
     elif df_path.endswith('.json'):
@@ -76,7 +76,6 @@ if drop_cols is not None:
 n_nan_rows_before = df.shape[0]
 df.dropna(inplace=True)
 n_nan_rows_after = df.shape[0]
-
 n_rows_dropped = n_nan_rows_before - n_nan_rows_after
 
 print(f"Deleted {n_rows_dropped} rows containing NaNs.")
