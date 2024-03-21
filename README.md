@@ -31,6 +31,7 @@ bash demo.sh
 ```
 
 ## Configuration
+### Preprocessing options
  * ```df_path```: Path to the dataframe.
  * ```preprocess_mode```: Preprocessing mode, either 'infer' or 'preprocess'. Use 'infer' if you are not sure which variables are categorical and set the ```unique_threshold``` accordingly. Otherwise use 'preprocess' and set the features name that will be treated as categorical via the . If there are not any categorical features, set this flag to 'preprocess' and ```categorical_cols``` to None.
  * ```unique_threshold```: this threshold represents the maximum ratio of unique values to the total number of rows a column can have before being considered numerical given that ```preprocess_mode``` is 'infer'.
@@ -42,10 +43,12 @@ bash demo.sh
  * ```pass_cols```: columns that should not be preprocessed
  * ```drop_cols```: columns that won't take part to the model
 
+### Manifold learning options
  * ```technique```: name of the manifold learning technique to apply. Options are 'TSNE', 'Isomap', 'MDS', 'LLE
  * ```manifold_params```: a dict, parameters to pass to the manifold learning algorithm. None will use pre-set parameters.
  * ```manifold_df_path```: path/to/learned dataframe
 
+### Graph learning options
  * ```relationship_mode```: the dataframe to use to learn the distance relationships. Can be `original` (original dataset), `preprocessed` (the preprocessed dataframe obtained by the preprocessing step specified above) or `manifold` (the dataset learned by the manifold learning technique specified above).
  * ```graph_mode```: option for the graph. Pick one among ['neighbors', 'distance', 'similarity'].
     * ```neighbors```: creates a graph where a limited number of close nodes in the feature space are connected.
@@ -62,6 +65,7 @@ bash demo.sh
                         ```cos_sim``` is implemented for this task. In case of custom similarity function, make sure to specify them in utils.py and make sure that the input is function(p_1, p_2) and should return a float value in the range [0, 1].
             * ```similarity_threshold```: float, the threshold for adding an edge between two nodes based on similarity.
 
+### Graph visualization options
  * ```graph_params```: dict, see above. None will use pre-set parameters.
  * ```plot_graph```: boolean value: to print or not the graph
  * ```graph_path```: path/to/graph object
