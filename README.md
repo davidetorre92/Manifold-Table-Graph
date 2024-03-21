@@ -15,7 +15,7 @@ flowchart TD
     subgraph Input
     conf[/configuration/] --> A
     end
-    A[/Dataframe/] --> B{Preprocess}
+    A[/Dataframe/] --> B0[Drop rows containing NaNs.] --> B{Preprocess}
     conf[/configuration/] -->|preprocess_mode| B
 
     subgraph Preprocess

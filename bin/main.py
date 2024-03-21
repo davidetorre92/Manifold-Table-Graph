@@ -72,7 +72,15 @@ if drop_cols is not None:
     df = df.drop(drop_cols, axis = 1)
 
 # Step 1: preprocess
+# Clean from nans
+n_nan_rows_before = df.shape[0]
+df.dropna(inplace=True)
+n_nan_rows_after = df.shape[0]
 
+n_rows_dropped = n_nan_rows_before - n_nan_rows_after
+
+print(f"Deleted {n_rows_dropped} rows containing NaNs.")
+# Now, preprocess.
 drop_cols_pp = []
 
 if ids_col is not None: drop_cols_pp.append(ids_col)
