@@ -5,7 +5,9 @@ A Python library for creating a graph representation of tabular data.
 ## Features
 
 - **Distance Metrics:** Evaluate distances between data points using user-defined metrics.
-- **Graph Creation:** Generate graphs using the igraph library with edges based on distance metrics.
+- **Manifold Learning:** Implement manifold learning techniques using user-defined methods.
+- **Graph Creation:** Generate graphs using the NetworkX library with edges based on distance metrics.
+- **Statistics on the learned graph:** Evaluate the neighbors correlation, degree distribution, betweeness distribution and communities composition.
 - **Visualization:** Plot the graph to understand how different data is distributed
 ## Diagram
 ```mermaid
@@ -74,13 +76,13 @@ Will make a graph from the scikit learn's make blobs dataset.
  * ```df_path```: Path to the dataframe.
  * ```preprocess_mode```: Preprocessing mode, either 'infer' or 'preprocess'. Use 'infer' if you are not sure which variables are categorical and set the ```unique_threshold``` accordingly. Otherwise use 'preprocess' and set the features name that will be treated as categorical via the . If there are not any categorical features, set this flag to 'preprocess' and ```categorical_cols``` to None.
  * ```unique_threshold```: this threshold represents the maximum ratio of unique values to the total number of rows a column can have before being considered numerical given that ```preprocess_mode``` is 'infer'.
- * ```categorical_cols```: the list of columns that will be threated as categorical when ```preprocess_mode`` is set to 'preprocess'.
+ * ```categorical_cols```: the list of columns that will be threated as categorical when ```preprocess_mode``` is set to 'preprocess'.
  * ```scaler```: option to set the scaler to be applied to the remaining numerical columns. One among ['standard', 'minmax'].
  * ```preprocess_df_path```: path/to/preprocessed dataframe.
- * ```label_col```: column containing the label to be predicted, leave None for no prediction
- * ```ids_col```: column containing the id
- * ```pass_cols```: columns that should not be preprocessed
- * ```drop_cols```: columns that won't take part to the model
+ * ```label_col```: column containing the label to be predicted, leave None for no predictions
+ * ```ids_col```: column containing the id. Set to None where there are no ids and the row's id will be used.
+ * ```pass_cols```: columns that should not be preprocessed.
+ * ```drop_cols```: columns that won't take part to the model.
 
 ### Manifold learning options
  * ```technique```: name of the manifold learning technique to apply. Options are 'TSNE', 'Isomap', 'MDS', 'LLE
@@ -116,8 +118,9 @@ Will make a graph from the scikit learn's make blobs dataset.
  * ```community_composition_outpath```: path/to communtity composition of a graph. Communities are evaluated with Girvan Newman algorithm.
 
 ## Launching the with custom configuration
+Once you set the variables in ```bin/config.py```, just exec:
 ```python
-python bin/main.py -c path/to/your/config.py
+python bin/main.py
 ```
 
 # Contacts
