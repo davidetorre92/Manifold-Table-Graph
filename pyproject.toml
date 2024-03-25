@@ -1,0 +1,18 @@
+[project]
+name = "manifold_table_graph"
+version = "0.0.1"
+authors = [
+  { name="Davide Torre", email="davidetorre92@gmail.com" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Linux",
+]
+
+[project.urls]
+Homepage = "https://github.com/davidetorre92/Manifold-Table-Graph"
+Issues = "https://github.com/davidetorre92/Manifold-Table-Graph/issues"
