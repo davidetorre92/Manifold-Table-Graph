@@ -15,7 +15,7 @@ pass_cols = None # columns that should not be preprocessed
 drop_cols = None # columns that won't take part to the model
 
 # [manifold learning options]
-technique = 'TSNE' # Options are 'TSNE', 'Isomap', 'MDS', 'LLE
+technique = 'TSNE' # Options are 'TSNE', 'Isomap', 'MDS', 'LLE'
 manifold_params = None # None will use pre-set parameters.
 manifold_df_path = 'results/demo/manifold_df.pickle'
 

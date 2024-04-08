@@ -127,6 +127,6 @@ python bin/main.py
 # Contacts
 For any inquiries or futher discussion regarding this project, we invite to reach out to us. Our contacts are
 
-- [Davide Torre](https://www.linkedin.com/in/davidetorre92/): d[dot]torre[at]iac[dot]cnr[dot]it
+- [Davide Torre](https://www.linkedin.com/in/davidetorre92/): d[dot]torre[at]iac[dot]cnr[dot]it; dtorre[at]luiss[dot]it
 - [Davide Chicco](https://davidechicco.it): davidechicco[at]davidechicco[dot]it
 

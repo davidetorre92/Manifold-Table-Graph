@@ -344,6 +344,7 @@ def degree_distributions(G, outpath):
     ax.set_ylabel('Number of Nodes')
     ax.set_xscale('log')
     ax.set_yscale('log')
+    ax.set_grid()
     fig.show()
     fig.savefig(outpath)
     print(f"Degree distribution saved in {outpath}")
@@ -360,6 +361,7 @@ def betweenness_distributions(G, outpath):
     ax.set_title('Betweenness Distribution')
     ax.set_xlabel('Betweenness')
     ax.set_ylabel('Number of Nodes')
+    ax.set_grid()
     fig.savefig(outpath)
     print(f"Betweenness distribution saved in {outpath}")
 
@@ -375,6 +377,7 @@ def eigenvector_distributions(G, outpath):
     ax.set_title('Eigenvector centrality distribution')
     ax.set_xlabel('Eigenvector')
     ax.set_ylabel('Number of Nodes')
+    ax.set_grid()
     fig.savefig(outpath)
     print(f"Eigenvector distribution saved in {outpath}")
 
@@ -420,6 +423,7 @@ def plot_community_composition(G, attribute_name, outpath):
     ax.set_xlabel('Community ID')
     ax.set_ylabel('Counts')
     ax.set_title('Counts of outcomes by community ID')
+    ax.set_grid()
     ax.legend()
 
     # Show the plot
@@ -463,6 +467,7 @@ def heat_map_prob(probabilities, df_neigh, label_col, prob_heatmap_path):
     ax.set_yticks(range(len(labels)))
     ax.set_xticklabels(labels)
     ax.set_yticklabels(labels)
+    ax.set_grid()
     plt.xlabel('Label j')
     plt.ylabel('Label i')
 
