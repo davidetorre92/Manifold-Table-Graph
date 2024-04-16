@@ -10,12 +10,12 @@ class ManifoldGraph:
     This class for graph creation from data.
     """
     
-    def __init__(self, df, **config):
+    def __init__(self, **config):
         """
         The constructor for the ManifoldGraph class.
         
         Parameters:
-        - df: the dataframe. Can be a path/to/dataframe or a pandas dataframe.
+        - cofig: configuration.
         """
         # Default and placeholders
         _PP_INFER_STR = 'infer'
@@ -80,14 +80,17 @@ class ManifoldGraph:
             if manifold_learning_technique in _manifold_learning_techniques:
                 self.manifold_learning_technique = manifold_learning_technique
             else:
-                self.manifold_learning_technique = _manifold_learning_technique_default
+                raise ValueError
+        else:
+            self.manifold_learning_technique = _manifold_learning_technique_default
 
         if 'manifold_learning_params' in config:
             if type(config['manifold_learning_params']) == dict:
                 self.manifold_learning_params = config['manifold_learning_params']
             else:
                 raise ValueError
-
+        else:
+            self.manifold_learning_params = None
 
         if 'relationship_mode' in config:
             relationship_mode = config['relationship_mode']
@@ -168,12 +171,10 @@ class ManifoldGraph:
         else:
             self.label_col = None
 
-        if 'pass_col' in config:
-            self.pass_col = config['pass_col']
+        if 'pass_cols' in config:
+            self.pass_cols = config['pass_cols']
         else:
-            self.pass_col = None
-
-        self.df = self.__read_df__(df)
+            self.pass_cols = None
 
     def _append_date_to_filenames(self, path):
         current_datetime = datetime.now().strftime("_%Y%m%d%H%M")
@@ -222,14 +223,16 @@ class ManifoldGraph:
         else:
             raise ValueError
         
-    def run(self):
+    def run(self, df):
+
+        df = self.__read_df__(df)
         if self.drop_cols is not None:
             df = df.drop(self.drop_cols, axis = 1)
 
         # Step 1: preprocess
         # Clean from nans
-        n_nan_rows_before = self.df.shape[0]
-        self.df.dropna(inplace=True)
+        n_nan_rows_before = df.shape[0]
+        df.dropna(inplace=True)
         n_nan_rows_after = df.shape[0]
         n_rows_dropped = n_nan_rows_before - n_nan_rows_after
 
@@ -250,7 +253,7 @@ class ManifoldGraph:
         if drop_cols_pp != []:
             X = df.drop(drop_cols_pp, axis = 1)
         else:
-            X = df.values
+            X = df
         if self.label_col is not None:
             y = df[self.label_col]
             y.reset_index(drop = True, inplace = True)

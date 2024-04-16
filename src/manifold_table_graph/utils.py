@@ -133,6 +133,8 @@ def apply_manifold_learning(df, technique='TSNE', params=None):
         model = MDS(**params)
     elif technique == 'LLE':
         model = LocallyLinearEmbedding(**params)
+    elif technique == 'UMAP':
+        model = LocallyLinearEmbedding(**params)
     else:
         raise ValueError(f"Unsupported technique: {technique}. Choose from 'TSNE', 'Isomap', 'MDS', 'LLE'.")
 
@@ -344,7 +346,7 @@ def degree_distributions(G, outpath):
     ax.set_ylabel('Number of Nodes')
     ax.set_xscale('log')
     ax.set_yscale('log')
-    ax.set_grid()
+    ax.grid()
     fig.show()
     fig.savefig(outpath)
     print(f"Degree distribution saved in {outpath}")
@@ -361,7 +363,7 @@ def betweenness_distributions(G, outpath):
     ax.set_title('Betweenness Distribution')
     ax.set_xlabel('Betweenness')
     ax.set_ylabel('Number of Nodes')
-    ax.set_grid()
+    ax.grid()
     fig.savefig(outpath)
     print(f"Betweenness distribution saved in {outpath}")
 
@@ -377,7 +379,7 @@ def eigenvector_distributions(G, outpath):
     ax.set_title('Eigenvector centrality distribution')
     ax.set_xlabel('Eigenvector')
     ax.set_ylabel('Number of Nodes')
-    ax.set_grid()
+    ax.grid()
     fig.savefig(outpath)
     print(f"Eigenvector distribution saved in {outpath}")
 
@@ -388,15 +390,26 @@ def plot_community_composition(G, attribute_name, outpath):
     communities = [list(c) for c in sorted(top_level_communities, key=len, reverse=True)]
 
     # Infer labels from the graph
-    labels_per_node = [G.nodes[node][attribute_name] for node in G.nodes()]
-    unique_labels = np.unique(labels_per_node)
+    if attribute_name is not None:
+        labels_per_node = [G.nodes[node][attribute_name] for node in G.nodes()]
+        unique_labels = np.unique(labels_per_node)
+    else:
+        labels_per_node = [0 for node in G.nodes()]
+        unique_labels = [0]
 
     # Prepare data for stacked bar plot
     community_compositions = {}
-    for comm_id, community in enumerate(communities):
-      labels_community = [G.nodes[node][attribute_name] for node in community]
-      label_count = Counter(labels_community)
-      community_compositions[comm_id] = {label: label_count.get(label, 0) for label in unique_labels}
+    if attribute_name is not None:
+        for comm_id, community in enumerate(communities):
+            labels_community = [G.nodes[node][attribute_name] for node in community]
+            label_count = Counter(labels_community)
+            community_compositions[comm_id] = {label: label_count.get(label, 0) for label in unique_labels}
+
+    else:
+        for comm_id, community in enumerate(communities):
+            labels_community = [0 for node in community]
+            label_count = Counter(labels_community)
+            community_compositions[comm_id] = {label: label_count.get(label, 0) for label in unique_labels}
 
     # Prepare data for plotting
     indices = list(community_compositions.keys())
@@ -423,7 +436,7 @@ def plot_community_composition(G, attribute_name, outpath):
     ax.set_xlabel('Community ID')
     ax.set_ylabel('Counts')
     ax.set_title('Counts of outcomes by community ID')
-    ax.set_grid()
+    ax.grid()
     ax.legend()
 
     # Show the plot
@@ -467,7 +480,7 @@ def heat_map_prob(probabilities, df_neigh, label_col, prob_heatmap_path):
     ax.set_yticks(range(len(labels)))
     ax.set_xticklabels(labels)
     ax.set_yticklabels(labels)
-    ax.set_grid()
+    ax.grid()
     plt.xlabel('Label j')
     plt.ylabel('Label i')
 
