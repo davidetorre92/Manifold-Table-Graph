@@ -2,7 +2,7 @@
 name = "manifold_table_graph"
 version = "0.0.1"
 authors = [
-  { name="Davide Torre", email="davidetorre92@gmail.com" },
+  { name="Davide Torre", email="davidetorre92[at]gmail[dot]com" },
 ]
 description = "A small example package"
 readme = "README.md"

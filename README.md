@@ -57,7 +57,7 @@ flowchart TD
 To get started, clone the repository using the following command:
 
 ```bash
-git clone https://https://github.com/davidetorre92/Manifold-Table-Graph
+git clone https://github.com/davidetorre92/Manifold-Table-Graph
 ```
 ### Installing Requirements
 Navigate to the repository directory and install the required dependencies using:
